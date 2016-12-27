@@ -10,7 +10,7 @@ function createBox(option){
 		option.title,
 		"</a>",
 		"<p class=\"price\">",
-		"¥",
+		"￥",
 		option.price,
 		"万</p>",
 		"<p class=\"content\">",
@@ -19,7 +19,7 @@ function createBox(option){
 			return [
 				date.getFullYear(),
 				"/",
-				date.getMonth() + 1,
+				date.getMonth() + 1
 			].join("");
 		}(),
 		"上牌 | ",
@@ -56,108 +56,194 @@ var filterSetting = [
 		options : [
 			{
 				name : "1万公里以内",
-				value : 1,
+				value : 1
 			},
 			{
 				name : "3万公里以内",
-				value : 3,
+				value : 3
 			},
 			{
 				name : "5万公里以内",
-				value : 5,
+				value : 5
 			},
 			{
 				name : "8万公里以内",
-				value : 8,
-			},
-		],
+				value : 8
+			}
+		]
 	},
 	{
 		title : "变速箱",
 		options : [
 			{
 				name : "MT-手动",
-				value : 1,
+				value : 1
 			},
 			{
 				name : "AT-自动",
-				value : 2,
-			},
-		],
+				value : 2
+			}
+		]
 	},
 	{
 		title : "排量",
 		options : [
 			{
 				name : "1.0L以下",
-				value : "1.0",
+				value : "1.0"
 			},
 			{
 				name : "1.1L-1.6L",
-				value : "1.1",
+				value : "1.1"
 			},
 			{
 				name : "1.6L-2.0L",
-				value : "1.6",
+				value : "1.6"
 			},
 			{
 				name : "2.0L-2.5L",
-				value : "2.0",
+				value : "2.0"
 			},
 			{
 				name : "2.5L-3.0L",
-				value : "2.5",
+				value : "2.5"
 			},
 			{
 				name : "3.0L-4.0L",
-				value : "3.0",
+				value : "3.0"
 			},
 			{
 				name : "4.0L以上",
-				value : "4.0",
-			},
-		],
+				value : "4.0"
+			}
+		]
 	},
 	{
 		title : "排放标准",
 		options : [
 			{
 				name : "国二及以上",
-				value : 1,
+				value : 1
 			},
 			{
 				name : "国三及以上",
-				value : 2,
+				value : 2
 			},
 			{
 				name : "国四及以上",
-				value : 3,
-			},
-		],
+				value : 3
+			}
+		]
 	},
 	{
 		title : "国别",
 		options : [
 			{
 				name : "德国",
-				value : "101",
+				value : "101"
 			},
 			{
 				name : "日本",
-				value : "308",
+				value : "308"
 			},
 			{
 				name : "美国",
-				value : "123",
+				value : "123"
 			},
 			{
 				name : "韩国",
-				value : "212",
+				value : "212"
 			},
 			{
 				name : "中国",
-				value : "095",
-			},
-		],
+				value : "095"
+			}
+		]
 	},
+	{
+		title : "价格",
+		options : [
+			{
+				name : "5万元以下",
+				value : "0-5"
+			},
+			{
+				name : "5-10万元间",
+				value : "5-10"
+			},
+			{
+				name : "10-20万元间",
+				value : "10-20"
+			},
+			{
+				name : "20-50万元间",
+				value : "20-50"
+			},
+			{
+				name : "50万元以上",
+				value : "50-5000"
+			}
+		]
+	}
 ];
+function createSelect(option){
+	var container = document.createElement("div"),
+		title = document.createElement("h2"),
+		select = document.createElement("div"),
+		placeholder = document.createElement("span"),
+		icon = document.createElement("i"),
+		ul = function(){
+			var ul = document.createElement("ul");
+			option.options.forEach(function(item){
+				var li = document.createElement("li");
+				li.innerText = item.name;
+				li.onclick = function(){
+					renderCars(carData.filter(function(_item){
+						return option.filterFunc(_item, item.value);
+					}));
+					placeholder.innerText = item.name;
+				};
+				ul.appendChild(li);
+			});
+			var _default = document.createElement("li");
+			_default.innerText = "不限";
+			_default.onclick = function(){
+				renderCars(carData);
+				placeholder.innerText = "请选择" + option.title;
+			};
+			ul.appendChild(_default);
+			return ul;
+		}(),
+		status = 0;
+	container.className = "row";
+	placeholder.innerText = "请选择" + option.title;
+	icon.className = "icon2 down";
+	select.onclick = function(){
+		select.className = ["select ", ["normal", "current"][status]].join("");
+		status ^= 1;
+	};
+	title.innerText = option.title;
+	select.className = "select normal";
+	select.appendChild(placeholder);
+	select.appendChild(icon);
+	select.appendChild(ul);
+	container.appendChild(title);
+	container.appendChild(select);
+	return container;
+}
+var filterFragment = document.createDocumentFragment(),
+	//解耦
+	filterFunc = [
+		function(item, value){
+			return item.kilometer < value;
+		},,,,,
+		function(item, value){
+			var a = value.split("-");
+			return +item.price > a[0] && +item.price < a[1];
+		}
+	];
+filterSetting.forEach(function(item, index){
+	item.filterFunc = filterFunc[index];
+	filterFragment.appendChild(createSelect(item));
+});
+document.getElementById("bottom").appendChild(filterFragment);

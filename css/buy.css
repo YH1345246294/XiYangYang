@@ -156,3 +156,43 @@
 .bottomNav{
 	margin-top:400px;
 }
+.bottomDiv{
+	position: relative;
+	margin: 0 auto;
+	width: 1220px;
+	height: 500px;
+}
+.bottomDiv .bn1{
+	width: 190px;
+	height: 105px;
+	position: absolute;
+	left: 0;
+	top: 30px;
+}
+.bottomDiv .bn2{
+	width: 190px;
+	height: 105px;
+	position: absolute;
+	left: 190px;
+	top: 30px;
+}
+.ti{
+	display: block;
+	width: 190px;
+	height: 20px;
+	margin-bottom: 10px;
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+}
+.xb{
+	display: block;
+	width: 190px;
+	height: 25px;
+	line-height: 25px;
+	color: #717171;
+	font-size: 12px;
+}
+.xb:hover{
+	text-decoration: underline;
+}
